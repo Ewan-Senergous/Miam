@@ -8,6 +8,7 @@ export default function Ingredients({
   updateIngredients,
 }) {
   const { ingredients: allIngredients } = useLoaderData();
+  console.info("Ingrédients chargés depuis le loader :", allIngredients);
   const [filteredIngredients, setFilteredIngredients] =
     useState(allIngredients);
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +17,7 @@ export default function Ingredients({
     const results = allIngredients.filter((ingredient) =>
       ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    console.info("Ingrédients filtrés :", results);
     setFilteredIngredients(results);
   }, [searchTerm, allIngredients]);
 
@@ -23,6 +25,7 @@ export default function Ingredients({
     const updatedIngredients = selectedIngredients.includes(ingredient)
       ? selectedIngredients.filter((i) => i !== ingredient)
       : [...selectedIngredients, ingredient];
+    console.info("Ingrédients sélectionnés après toggle :", updatedIngredients);
     updateIngredients(updatedIngredients);
   };
 

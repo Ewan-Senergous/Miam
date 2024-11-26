@@ -28,14 +28,14 @@ const browseFilteredRecipes = async (req, res, next) => {
       category,
       difficulty,
       limit: parseInt(pageSize, 10),
-      offset: parseInt(offset, 10)
+      offset: parseInt(offset, 10),
     });
 
     res.json(recipes);
   } catch (error) {
     next(error);
   }
-}
+};
 
 const read = async (req, res, next) => {
   try {
@@ -70,11 +70,18 @@ const edit = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-
-
-    const { title, description, steps, difficulty, category, filename } =
-      req.body;
+    const {
+      title,
+      description,
+      steps,
+      difficulty,
+      category,
+      filename,
+      ingredients,
+    } = req.body;
     const { id } = req.user;
+
+    // Création de la recette
     const recipeId = await tables.recipe.create({
       userId: id,
       difficultyId: parseInt(difficulty, 10),
@@ -85,12 +92,29 @@ const add = async (req, res, next) => {
       cookingTime: 10,
       preparationTime: 10,
     });
-    (await JSON.parse(steps)).forEach((step) => {
+
+    // Insertion des étapes
+    const parsedSteps = JSON.parse(steps);
+    const stepPromises = parsedSteps.map((step) =>
       tables.recipeStep.create(recipeId, {
         number: step.step_number,
         description: step.content,
-      });
-    });
+      })
+    );
+    await Promise.all(stepPromises);
+
+    // Insertion des ingrédients
+    const parsedIngredients = JSON.parse(ingredients);
+    const ingredientPromises = parsedIngredients.map((ingredient) =>
+      tables.ingredient.addIngredientToRecipe({
+        recipeId,
+        ingredientId: ingredient.id,
+        quantity: ingredient.quantity || null,
+        unit: ingredient.unit || null,
+      })
+    );
+    await Promise.all(ingredientPromises);
+
     res.status(200).json({ success: true, recipeId });
   } catch (err) {
     next(err);

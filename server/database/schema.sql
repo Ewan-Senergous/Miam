@@ -355,7 +355,7 @@ VALUES (1, 2, ' Super recette ! Merci beaucoup.'),
 (1, 3, ' Super recette ! Très bien.');
 
 
-CREATE TABLE Recipe_Ingredient (
+CREATE TABLE recipe_ingredient (
     recipe_id INT NOT NULL,
     quantity DECIMAL(10,2),
     unit VARCHAR(20),
