@@ -36,6 +36,11 @@ export default function CreateRecipe() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    console.info("Titre de la recette :", recipeData.title);
+    console.info("Description :", recipeData.description);
+    console.info("Ingrédients sélectionnés :", recipeData.ingredients);
+    console.info("Étapes :", recipeData.steps);
+
     const formData = new FormData();
 
     formData.append("title", recipeData.title);
@@ -58,7 +63,7 @@ export default function CreateRecipe() {
           },
         }
       );
-      console.info("Response request submit recipe: ", response);
+      console.info("Réponse du backend :", response.data);
       if ("recipeId" in response.data)
         navigate(`/recipes-instruction/${response.data.recipeId}`);
       else navigate("/");
