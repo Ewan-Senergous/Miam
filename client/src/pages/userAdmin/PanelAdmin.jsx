@@ -5,7 +5,6 @@ const sections = [
   { title: "Utilisateurs", path: "/admin-users" },
   { title: "Recettes", path: "/admin-recipes" },
   { title: "Commentaires", path: "/admin-comments" },
-  { title: "Newsletters" },
 ];
 
 export default function PanelAdmin() {
@@ -19,9 +18,6 @@ export default function PanelAdmin() {
           </Link>
         ))}
       </div>
-      <button className="Return-button" type="button">
-        Retour
-      </button>
     </div>
   );
 }
