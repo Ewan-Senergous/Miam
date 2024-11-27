@@ -1,5 +1,7 @@
 form.create {
   max-width: 75rem;
-  width: fit-content;
+  width: 90%;
   margin: 3.75rem auto;
+  border-radius: 10px;
+  padding: 2rem;
 }

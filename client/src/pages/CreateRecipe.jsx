@@ -12,7 +12,7 @@ export default function CreateRecipe() {
     title: "",
     description: "",
     photo: null,
-    ingredients: [],
+    ingredients: [], // Inclut maintenant {id, name, quantity, unit}
     steps: [
       { id: "1", step_number: 1, content: "Préchauffez le four à 180°C" },
       {
@@ -52,6 +52,7 @@ export default function CreateRecipe() {
     }
     formData.append("ingredients", JSON.stringify(recipeData.ingredients));
     formData.append("steps", JSON.stringify(recipeData.steps));
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/recipes/`,
