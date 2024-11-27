@@ -22,10 +22,29 @@ export default function Ingredients({
   }, [searchTerm, allIngredients]);
 
   const handleIngredientToggle = (ingredient) => {
-    const updatedIngredients = selectedIngredients.includes(ingredient)
-      ? selectedIngredients.filter((i) => i !== ingredient)
-      : [...selectedIngredients, ingredient];
+    const updatedIngredients = selectedIngredients.some(
+      (i) => i.id === ingredient.id
+    )
+      ? selectedIngredients.filter((i) => i.id !== ingredient.id)
+      : [
+          ...selectedIngredients,
+          { ...ingredient, quantity: "", unit: "" }, // Ajouter des champs pour quantité et unité
+        ];
     console.info("Ingrédients sélectionnés après toggle :", updatedIngredients);
+    updateIngredients(updatedIngredients);
+  };
+
+  const handleQuantityChange = (id, quantity) => {
+    const updatedIngredients = selectedIngredients.map((ingredient) =>
+      ingredient.id === id ? { ...ingredient, quantity } : ingredient
+    );
+    updateIngredients(updatedIngredients);
+  };
+
+  const handleUnitChange = (id, unit) => {
+    const updatedIngredients = selectedIngredients.map((ingredient) =>
+      ingredient.id === id ? { ...ingredient, unit } : ingredient
+    );
     updateIngredients(updatedIngredients);
   };
 
@@ -47,7 +66,9 @@ export default function Ingredients({
             <label key={ingredient.id} className="ingredient-item">
               <input
                 type="checkbox"
-                checked={selectedIngredients.includes(ingredient)}
+                checked={selectedIngredients.some(
+                  (i) => i.id === ingredient.id
+                )}
                 onChange={() => handleIngredientToggle(ingredient)}
               />
               <span className="ingredient-name">{ingredient.name}</span>
@@ -60,7 +81,27 @@ export default function Ingredients({
           <h3>Ingrédients sélectionnés</h3>
           <ul>
             {selectedIngredients.map((ingredient) => (
-              <li key={ingredient.id}>{ingredient.name}</li>
+              <li key={ingredient.id} className="selected-ingredient-item">
+                <span>{ingredient.name}</span>
+                <input
+                  type="text"
+                  placeholder="Quantité"
+                  value={ingredient.quantity}
+                  onChange={(e) =>
+                    handleQuantityChange(ingredient.id, e.target.value)
+                  }
+                  className="ingredient-quantity-input"
+                />
+                <input
+                  type="text"
+                  placeholder="Unité"
+                  value={ingredient.unit}
+                  onChange={(e) =>
+                    handleUnitChange(ingredient.id, e.target.value)
+                  }
+                  className="ingredient-unit-input"
+                />
+              </li>
             ))}
           </ul>
         </div>
@@ -74,6 +115,8 @@ Ingredients.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
+      quantity: PropTypes.string,
+      unit: PropTypes.string,
     })
   ).isRequired,
   updateIngredients: PropTypes.func.isRequired,
