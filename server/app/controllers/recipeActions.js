@@ -62,9 +62,71 @@ const edit = async (req, res, next) => {
 
   try {
     await tables.recipe.update(recipe);
+
+    const steps = Array.isArray(req.body.steps)
+      ? req.body.steps
+      : JSON.parse(req.body.steps || "[]");
+
+    await tables.recipeStep.deleteByRecipeId(recipe.id);
+    const stepPromises = steps.map((step) =>
+      tables.recipeStep.create(recipe.id, {
+        number: step.step_number,
+        description: step.content,
+      })
+    );
+    await Promise.all(stepPromises);
+
+    const ingredients = Array.isArray(req.body.ingredients)
+      ? req.body.ingredients
+      : JSON.parse(req.body.ingredients || "[]");
+
+    await tables.ingredient.deleteByRecipeId(recipe.id);
+    const ingredientPromises = ingredients.map((ingredient) =>
+      tables.ingredient.addIngredientToRecipe({
+        recipeId: recipe.id,
+        ingredientId: ingredient.id,
+        quantity: ingredient.quantity || null,
+        unit: ingredient.unit || null,
+      })
+    );
+    await Promise.all(ingredientPromises);
+
     res.sendStatus(204);
   } catch (err) {
     next(err);
+  }
+};
+
+const updateRecipeDetails = async (req, res, next) => {
+  const { title, description } = req.body; // Champs envoyés par le client
+  const recipeId = req.params.id; // ID de la recette depuis les paramètres
+  const imageUrl = req.body.filename || null; // Nom du fichier envoyé via multer
+
+  try {
+    // Validation des champs requis
+    if (!title || typeof title !== "string") {
+      return res.status(400).json({ message: "Le titre est requis." });
+    }
+
+    if (!description || typeof description !== "string") {
+      return res.status(400).json({ message: "La description est requise." });
+    }
+
+    const updated = await tables.recipe.updateRecipeDetails(recipeId, {
+      title,
+      description,
+      imageUrl,
+    });
+
+    if (updated === 0) {
+      return res.status(404).json({ message: "Recette non trouvée." });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Titre, description et image mis à jour avec succès." });
+  } catch (err) {
+    return next(err);
   }
 };
 
@@ -161,4 +223,5 @@ module.exports = {
   add,
   destroy,
   readRandom,
+  updateRecipeDetails,
 };

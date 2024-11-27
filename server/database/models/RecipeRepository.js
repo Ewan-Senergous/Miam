@@ -36,7 +36,13 @@ class RecipeRepository extends AbstractRepository {
     return rows;
   }
 
-  async readFilteredRecipes({ searchTerm = '', category = 'all', difficulty = 'all', limit = 15, offset = 0 }) {
+  async readFilteredRecipes({
+    searchTerm = "",
+    category = "all",
+    difficulty = "all",
+    limit = 15,
+    offset = 0,
+  }) {
     let query = `
       SELECT DISTINCT
         r.id, r.title, r.image_url, r.description,
@@ -57,12 +63,12 @@ class RecipeRepository extends AbstractRepository {
       queryParams.push(`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`);
     }
 
-    if (category !== 'all') {
+    if (category !== "all") {
       query += ` AND c.name = ?`;
       queryParams.push(category);
     }
 
-    if (difficulty !== 'all') {
+    if (difficulty !== "all") {
       query += ` AND d.name = ?`;
       queryParams.push(difficulty);
     }
@@ -103,13 +109,13 @@ class RecipeRepository extends AbstractRepository {
       WHERE recipe.id = ?
       ORDER BY recipe_step.step_number
     `;
-  
+
     const [rows] = await this.database.query(query, [id]);
-  
+
     if (rows.length === 0) {
       return null;
     }
-  
+
     const recipe = {
       id: rows[0].id,
       image_url: rows[0].image_url,
@@ -126,11 +132,11 @@ class RecipeRepository extends AbstractRepository {
       comments: [],
       steps: [],
     };
-  
+
     const ingredientSet = new Set();
     const commentSet = new Set();
     const stepSet = new Set();
-  
+
     rows.forEach((row) => {
       if (row.ingredient_name && !ingredientSet.has(row.ingredient_name)) {
         ingredientSet.add(row.ingredient_name);
@@ -140,7 +146,7 @@ class RecipeRepository extends AbstractRepository {
           quantity: row.quantity,
         });
       }
-  
+
       if (row.comment_id && !commentSet.has(row.comment_id)) {
         commentSet.add(row.comment_id);
         recipe.comments.push({
@@ -150,7 +156,7 @@ class RecipeRepository extends AbstractRepository {
           user_pseudo: row.comment_user_pseudo,
         });
       }
-  
+
       if (row.step_number && !stepSet.has(row.step_number)) {
         stepSet.add(row.step_number);
         recipe.steps.push({
@@ -159,9 +165,9 @@ class RecipeRepository extends AbstractRepository {
         });
       }
     });
-  
+
     recipe.steps.sort((a, b) => a.step_number - b.step_number);
-  
+
     return recipe;
   }
 
@@ -173,27 +179,38 @@ class RecipeRepository extends AbstractRepository {
         image_url AS recipe_image_url
       FROM ${this.table}
       WHERE user_id = ?
-    `
+    `;
     const [rows] = await this.database.query(query, [userId]);
     return rows;
   }
 
   async update(recipe) {
     const [result] = await this.database.query(
-      `update ${this.table} set user_id = ?,
-      image_url = ?, category_id = ?, difficulty_id = ?, title = ?, description = ?, cooking_time = , preparation_time = ?,instruction = ? where id = ?`,
+      `UPDATE ${this.table} 
+       SET user_id = ?, image_url = ?, category_id = ?, difficulty_id = ?, 
+           title = ?, description = ?, cooking_time = ?, preparation_time = ?
+       WHERE id = ?`,
       [
         recipe.user_id,
-        recipe.image_url,
-        recipe.category_id,
-        recipe.difficulty_id,
-        recipe.title,
-        recipe.description,
-        recipe.cooking_time,
-        recipe.preparation_time,
-        recipe.instruction,
+        recipe.image_url || null,
+        recipe.category_id || null,
+        recipe.difficulty_id || null,
+        recipe.title || null,
+        recipe.description || null,
+        recipe.cooking_time || 0, // Utiliser une valeur par défaut
+        recipe.preparation_time || 0, // Utiliser une valeur par défaut
         recipe.id,
       ]
+    );
+    return result.affectedRows;
+  }
+
+  async updateRecipeDetails(recipeId, { title, description, imageUrl }) {
+    const [result] = await this.database.query(
+      `UPDATE ${this.table} 
+       SET title = ?, description = ?, image_url = ?
+       WHERE id = ?`,
+      [title, description, imageUrl, recipeId]
     );
     return result.affectedRows;
   }
