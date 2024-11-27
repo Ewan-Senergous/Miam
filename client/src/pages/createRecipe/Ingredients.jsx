@@ -8,7 +8,7 @@ export default function Ingredients({
   updateIngredients,
 }) {
   const { ingredients: allIngredients } = useLoaderData();
-  console.info("Ingrédients chargés depuis le loader :", allIngredients);
+
   const [filteredIngredients, setFilteredIngredients] =
     useState(allIngredients);
   const [searchTerm, setSearchTerm] = useState("");
