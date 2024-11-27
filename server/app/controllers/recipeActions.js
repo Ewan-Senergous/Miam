@@ -94,7 +94,7 @@ const add = async (req, res, next) => {
     });
 
     // Insertion des étapes
-    const parsedSteps = JSON.parse(steps);
+    const parsedSteps = typeof steps === "string" ? JSON.parse(steps) : steps;
     const stepPromises = parsedSteps.map((step) =>
       tables.recipeStep.create(recipeId, {
         number: step.step_number,
@@ -104,7 +104,8 @@ const add = async (req, res, next) => {
     await Promise.all(stepPromises);
 
     // Insertion des ingrédients
-    const parsedIngredients = JSON.parse(ingredients);
+    const parsedIngredients =
+      typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
     const ingredientPromises = parsedIngredients.map((ingredient) =>
       tables.ingredient.addIngredientToRecipe({
         recipeId,
