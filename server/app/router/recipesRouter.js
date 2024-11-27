@@ -33,6 +33,12 @@ router.post("/", verifyToken, upload.single("file"), recipesActions.add); // Cr√
 
 router.put("/:id", recipesActions.edit); // Modifier une recette
 
+router.put(
+  "/:id/details",
+  upload.single("file"),
+  recipesActions.updateRecipeDetails
+);
+
 router.delete("/:id", verifyToken, recipesActions.destroy); // Supprimer une recette
 
 module.exports = router;

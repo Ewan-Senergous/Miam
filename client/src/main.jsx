@@ -59,30 +59,30 @@ const router = createBrowserRouter([
             path: "/user-profil",
             element: <UserProfil />,
           },
+          {
+            path: "/user",
+            element: <User />,
+          },
+          {
+            path: "/panel-admin",
+            element: <PanelAdmin />,
+          },
+          {
+            path: "/admin-users",
+            element: <AdminUsers />,
+            loader: adminUsersLoader,
+          },
+          {
+            path: "/admin-recipes",
+            element: <AdminRecipe />,
+            loader: adminRecipesLoader,
+          },
+          {
+            path: "/admin-comments",
+            element: <AdminComments />,
+            loader: adminCommentsLoader,
+          },
         ],
-      },
-      {
-        path: "/panel-admin",
-        element: <PanelAdmin />,
-      },
-      {
-        path: "/admin-users",
-        element: <AdminUsers />,
-        loader: adminUsersLoader,
-      },
-      {
-        path: "/admin-recipes",
-        element: <AdminRecipe />,
-        loader: adminRecipesLoader,
-      },
-      {
-        path: "/admin-comments",
-        element: <AdminComments />,
-        loader: adminCommentsLoader,
-      },
-      {
-        path: "/user",
-        element: <User />,
       },
       {
         path: "/buffet",
