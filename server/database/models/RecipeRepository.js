@@ -204,12 +204,12 @@ class RecipeRepository extends AbstractRepository {
     return result.affectedRows;
   }
 
-  async updateRecipeDetails(recipeId, { title, description }) {
+  async updateRecipeTitle(recipeId, title) {
     const [result] = await this.database.query(
       `UPDATE ${this.table} 
-       SET title = ?, description = ?
+       SET title = ?
        WHERE id = ?`,
-      [title, description, recipeId]
+      [title, recipeId]
     );
     return result.affectedRows;
   }

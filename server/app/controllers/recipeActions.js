@@ -68,32 +68,23 @@ const edit = async (req, res, next) => {
   }
 };
 
-const updateRecipeDetails = async (req, res, next) => {
-  const { title, description } = req.body; // Champs envoyés par le client
+const updateRecipeTitle = async (req, res, next) => {
+  const { title } = req.body; // Récupérer uniquement le titre depuis le corps de la requête
   const recipeId = req.params.id; // ID de la recette depuis les paramètres
 
   try {
-    // Validation des champs requis
+    // Validation du champ requis
     if (!title || typeof title !== "string") {
       return res.status(400).json({ message: "Le titre est requis." });
     }
 
-    if (!description || typeof description !== "string") {
-      return res.status(400).json({ message: "La description est requise." });
-    }
-
-    const updated = await tables.recipe.updateRecipeDetails(recipeId, {
-      title,
-      description,
-    });
+    const updated = await tables.recipe.updateRecipeTitle(recipeId, title);
 
     if (updated === 0) {
       return res.status(404).json({ message: "Recette non trouvée." });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Titre, description et image mis à jour avec succès." });
+    return res.status(200).json({ message: "Titre mis à jour avec succès." });
   } catch (err) {
     return next(err);
   }
@@ -191,5 +182,5 @@ module.exports = {
   add,
   destroy,
   readRandom,
-  updateRecipeDetails,
+  updateRecipeTitle,
 };
