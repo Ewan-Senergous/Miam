@@ -445,7 +445,7 @@ VALUES (22, 500, 'ml de', 112), (22, 5, '', 111), (22, 100, 'g de', 109), (22, 1
 
 -- Tomate garnie
 INSERT INTO recipe_ingredient (recipe_id, quantity, unit, ingredient_id)
-VALUES (23, 1, "", 66), (23, 1, "poignée de", 159), (23, 1, "bonne cas de", 106), (23, 1, "demi", 158), (23, 1, "pincée de", 165), (23, 2-3, "branche de", 24), (23, 2, "cas de", 160);
+VALUES (23, 1, "", 66), (23, 1, "poignée de", 159), (23, 1, "bonne cas de", 106), (23, 1, "demi", 158), (23, 1, "pincée de", 165), (23, 1, "branche de", 24), (23, 2, "cas de", 160);
 
 -- Verrine saumon avocat et skyr
 INSERT INTO recipe_ingredient (recipe_id, quantity, unit, ingredient_id)

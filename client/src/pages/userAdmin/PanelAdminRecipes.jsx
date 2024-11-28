@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "../../styles/panelAdmin/AdminRecipes.css";
@@ -6,35 +6,34 @@ import "../../styles/panelAdmin/AdminRecipes.css";
 export default function AdminRecipe() {
   const loadedRecipes = useLoaderData();
   const [recipes, setRecipes] = useState(loadedRecipes);
-  const [editingRecipeId, setEditingRecipeId] = useState(null); // ID de la recette en mode édition
-  const [updatedTitle, setUpdatedTitle] = useState(""); // État local pour le titre modifié
+  const [editingRecipeId, setEditingRecipeId] = useState(null);
+  const [updatedTitle, setUpdatedTitle] = useState("");
 
   const handleEditClick = (recipe) => {
-    setEditingRecipeId(recipe.id); // Activer le mode édition
-    setUpdatedTitle(recipe.title); // Pré-remplir le titre actuel
+    setEditingRecipeId(recipe.id);
+    setUpdatedTitle(recipe.title);
   };
 
   const handleCancelEdit = () => {
-    setEditingRecipeId(null); // Annuler le mode édition
-    setUpdatedTitle(""); // Réinitialiser le titre
+    setEditingRecipeId(null);
+    setUpdatedTitle("");
   };
 
   const handleSave = async (id) => {
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/api/recipes/${id}/title`,
-        { title: updatedTitle }, // Envoyer uniquement le titre
+        { title: updatedTitle },
         { withCredentials: true }
       );
 
-      // Mettre à jour l'état local des recettes
       setRecipes((prevRecipes) =>
         prevRecipes.map((recipe) =>
           recipe.id === id ? { ...recipe, title: updatedTitle } : recipe
         )
       );
 
-      setEditingRecipeId(null); // Quitter le mode édition
+      setEditingRecipeId(null);
     } catch (error) {
       console.error("Erreur lors de la mise à jour du titre :", error);
     }
@@ -60,11 +59,14 @@ export default function AdminRecipe() {
       <div className="recipe-AdminCards">
         {recipes.map((recipe) => (
           <div className="recipe-AdminCard" key={recipe.id}>
-            <img
-              src={recipe.image_url}
-              alt={recipe.title}
-              className="recipe-AdminImage"
-            />
+            {/* Link around image */}
+            <Link to={`/recipes-instruction/${recipe.id}`}>
+              <img
+                src={recipe.image_url}
+                alt={recipe.title}
+                className="recipe-AdminImage"
+              />
+            </Link>
             <div className="recipe-details">
               {editingRecipeId === recipe.id ? (
                 <div>
@@ -94,7 +96,10 @@ export default function AdminRecipe() {
                 </div>
               ) : (
                 <>
-                  <p>{recipe.title}</p>
+                  {/* Link around title */}
+                  <Link to={`/recipes-instruction/${recipe.id}`}>
+                    <p className="recipe-title">{recipe.title}</p>
+                  </Link>
                   <div className="actions-buttons">
                     <button
                       type="button"

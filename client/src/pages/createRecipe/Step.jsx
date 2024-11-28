@@ -26,10 +26,6 @@ export default function RecipeSteps({ steps, updateSteps }) {
     );
   };
 
-  const deleteStep = (id) => {
-    updateSteps(updateStepNumbers(steps.filter((step) => step.id !== id)));
-  };
-
   const handleReorder = (newOrder) => {
     updateSteps(updateStepNumbers(newOrder));
   };
@@ -56,13 +52,6 @@ export default function RecipeSteps({ steps, updateSteps }) {
                   onChange={(e) => updateStep(step.id, e.target.value)}
                   className="step-input"
                 />
-                <button
-                  className="delete-button"
-                  type="button"
-                  onClick={() => deleteStep(step.id)}
-                >
-                  &#10060;
-                </button>
               </div>
             </motion.div>
           </Reorder.Item>

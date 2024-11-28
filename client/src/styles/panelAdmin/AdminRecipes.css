@@ -159,7 +159,7 @@
   }
 
   .recipe-AdminImage {
-    width: 100%;
+    width: 13rem;
     height: 150px;
     object-fit: cover;
     border-radius: 10px 10px 0 0;

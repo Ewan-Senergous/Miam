@@ -52,15 +52,6 @@ export default function User({ username, description }) {
       <RecipeSection title="Mes recettes favorites" recipes={favoriteRecipes} />
 
       <div className="action-buttons">
-        <Link to="/create-recipe">
-          <button type="button" className="add-recipe-button">
-            Ajouter une nouvelle recette
-          </button>
-        </Link>
-        <button type="button" className="edit-recipe-button">
-          Modifier une recette
-        </button>
-
         {isAdmin && (
           <Link to="/panel-admin">
             <button type="button" className="admin-panel-button">
