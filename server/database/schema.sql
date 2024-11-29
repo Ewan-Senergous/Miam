@@ -337,7 +337,11 @@ INSERT INTO ingredient (name)
 ('oeuf de lump'),
 ('sauce teriyaki'),
 ('maïs'),
-('jus de citron vert');
+('jus de citron vert'),
+('de pâtes'),
+('de viande hachée'),
+("d'huile de tournesol"),
+('de sauce tomate');
 
 
 CREATE TABLE comment (
