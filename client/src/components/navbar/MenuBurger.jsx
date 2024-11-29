@@ -20,7 +20,6 @@ export default function MenuNavbar() {
           <button type="button" onClick={handleMenu}>
             <img src={Close} alt="Close" />
           </button>
-          <Link to="/passer-en-cuisine">Passer en cuisine</Link>
           <Link to="/recipes">Recettes</Link>
           <Link to="/register">Inscription</Link>
           <Link to="/login">
