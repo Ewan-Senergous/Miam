@@ -4,6 +4,7 @@ CREATE TABLE difficulty (
     name VARCHAR(50) NOT NULL UNIQUE
 );
 INSERT INTO difficulty (name) VALUES ('Facile'), ('Intermédiaire'), ('Difficile');
+
 CREATE TABLE user (
    id INT AUTO_INCREMENT PRIMARY KEY,
    username VARCHAR(50) NOT NULL,
@@ -20,6 +21,7 @@ INSERT INTO user (username, fullname, password, email, role)
 VALUES ('GastroGeek','Ewan', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'ewan@outlook.fr','admin'),
 ('Chef_Gourmand','Kevin', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'kevin@outlook.fr','user'),
 ('PatissierePoetique','Anais', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'anais@outlook.fr','user');
+
 CREATE TABLE category (
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(50)
