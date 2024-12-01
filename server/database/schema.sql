@@ -4,6 +4,7 @@ CREATE TABLE difficulty (
     name VARCHAR(50) NOT NULL UNIQUE
 );
 INSERT INTO difficulty (name) VALUES ('Facile'), ('Intermédiaire'), ('Difficile');
+
 CREATE TABLE user (
    id INT AUTO_INCREMENT PRIMARY KEY,
    username VARCHAR(50) NOT NULL,
@@ -17,9 +18,10 @@ CREATE TABLE user (
 );
 
 INSERT INTO user (username, fullname, password, email, role)
-VALUES ('GastroGeek', 'Ewan', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'ewan@outlook.fr', 'admin'),
-('Chef_Gourmand', 'Kevin', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek','kevin@outlook.fr', 'user'),
+VALUES ('GastroGeek','Ewan', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'ewan@outlook.fr','admin'),
+('Chef_Gourmand','Kevin', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'kevin@outlook.fr','user'),
 ('PatissierePoetique','Anais', '$argon2id$v=19$m=19456,t=2,p=1$63KffLv3FneEo8gNVl9Sow$I16Fx9yu1qKmpMQZ2exTgyvY5+RMJy23eTsNutAqrek', 'anais@outlook.fr','user');
+
 CREATE TABLE category (
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(50)
@@ -337,7 +339,11 @@ INSERT INTO ingredient (name)
 ('oeuf de lump'),
 ('sauce teriyaki'),
 ('maïs'),
-('jus de citron vert');
+('jus de citron vert'),
+('de pâtes'),
+('de viande hachée'),
+("d'huile de tournesol"),
+('de sauce tomate');
 
 
 CREATE TABLE comment (
@@ -355,7 +361,7 @@ VALUES (1, 2, ' Super recette ! Merci beaucoup.'),
 (1, 3, ' Super recette ! Très bien.');
 
 
-CREATE TABLE Recipe_Ingredient (
+CREATE TABLE recipe_ingredient (
     recipe_id INT NOT NULL,
     quantity DECIMAL(10,2),
     unit VARCHAR(20),
@@ -445,7 +451,7 @@ VALUES (22, 500, 'ml de', 112), (22, 5, '', 111), (22, 100, 'g de', 109), (22, 1
 
 -- Tomate garnie
 INSERT INTO recipe_ingredient (recipe_id, quantity, unit, ingredient_id)
-VALUES (23, 1, "", 66), (23, 1, "poignée de", 159), (23, 1, "bonne cas de", 106), (23, 1, "demi", 158), (23, 1, "pincée de", 165), (23, 2-3, "branche de", 24), (23, 2, "cas de", 160);
+VALUES (23, 1, "", 66), (23, 1, "poignée de", 159), (23, 1, "bonne cas de", 106), (23, 1, "demi", 158), (23, 1, "pincée de", 165), (23, 1, "branche de", 24), (23, 2, "cas de", 160);
 
 -- Verrine saumon avocat et skyr
 INSERT INTO recipe_ingredient (recipe_id, quantity, unit, ingredient_id)

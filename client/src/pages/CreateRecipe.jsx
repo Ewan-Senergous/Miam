@@ -12,7 +12,7 @@ export default function CreateRecipe() {
     title: "",
     description: "",
     photo: null,
-    ingredients: [],
+    ingredients: [], // Inclut maintenant {id, name, quantity, unit}
     steps: [
       { id: "1", step_number: 1, content: "Préchauffez le four à 180°C" },
       {
@@ -36,6 +36,11 @@ export default function CreateRecipe() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    console.info("Titre de la recette :", recipeData.title);
+    console.info("Description :", recipeData.description);
+    console.info("Ingrédients sélectionnés :", recipeData.ingredients);
+    console.info("Étapes :", recipeData.steps);
+
     const formData = new FormData();
 
     formData.append("title", recipeData.title);
@@ -47,6 +52,7 @@ export default function CreateRecipe() {
     }
     formData.append("ingredients", JSON.stringify(recipeData.ingredients));
     formData.append("steps", JSON.stringify(recipeData.steps));
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/recipes/`,
@@ -58,7 +64,7 @@ export default function CreateRecipe() {
           },
         }
       );
-      console.info("Response request submit recipe: ", response);
+      console.info("Réponse du backend :", response.data);
       if ("recipeId" in response.data)
         navigate(`/recipes-instruction/${response.data.recipeId}`);
       else navigate("/");

@@ -28,14 +28,14 @@ const browseFilteredRecipes = async (req, res, next) => {
       category,
       difficulty,
       limit: parseInt(pageSize, 10),
-      offset: parseInt(offset, 10)
+      offset: parseInt(offset, 10),
     });
 
     res.json(recipes);
   } catch (error) {
     next(error);
   }
-}
+};
 
 const read = async (req, res, next) => {
   try {
@@ -68,13 +68,42 @@ const edit = async (req, res, next) => {
   }
 };
 
+const updateRecipeTitle = async (req, res, next) => {
+  const { title } = req.body; // Récupérer uniquement le titre depuis le corps de la requête
+  const recipeId = req.params.id; // ID de la recette depuis les paramètres
+
+  try {
+    // Validation du champ requis
+    if (!title || typeof title !== "string") {
+      return res.status(400).json({ message: "Le titre est requis." });
+    }
+
+    const updated = await tables.recipe.updateRecipeTitle(recipeId, title);
+
+    if (updated === 0) {
+      return res.status(404).json({ message: "Recette non trouvée." });
+    }
+
+    return res.status(200).json({ message: "Titre mis à jour avec succès." });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const add = async (req, res, next) => {
   try {
-
-
-    const { title, description, steps, difficulty, category, filename } =
-      req.body;
+    const {
+      title,
+      description,
+      steps,
+      difficulty,
+      category,
+      filename,
+      ingredients,
+    } = req.body;
     const { id } = req.user;
+
+    // Création de la recette
     const recipeId = await tables.recipe.create({
       userId: id,
       difficultyId: parseInt(difficulty, 10),
@@ -85,12 +114,30 @@ const add = async (req, res, next) => {
       cookingTime: 10,
       preparationTime: 10,
     });
-    (await JSON.parse(steps)).forEach((step) => {
+
+    // Insertion des étapes
+    const parsedSteps = typeof steps === "string" ? JSON.parse(steps) : steps;
+    const stepPromises = parsedSteps.map((step) =>
       tables.recipeStep.create(recipeId, {
         number: step.step_number,
         description: step.content,
-      });
-    });
+      })
+    );
+    await Promise.all(stepPromises);
+
+    // Insertion des ingrédients
+    const parsedIngredients =
+      typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+    const ingredientPromises = parsedIngredients.map((ingredient) =>
+      tables.ingredient.addIngredientToRecipe({
+        recipeId,
+        ingredientId: ingredient.id,
+        quantity: ingredient.quantity || null,
+        unit: ingredient.unit || null,
+      })
+    );
+    await Promise.all(ingredientPromises);
+
     res.status(200).json({ success: true, recipeId });
   } catch (err) {
     next(err);
@@ -136,4 +183,5 @@ module.exports = {
   add,
   destroy,
   readRandom,
+  updateRecipeTitle,
 };
